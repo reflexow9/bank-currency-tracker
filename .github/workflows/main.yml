@@ -1,0 +1,34 @@
+name: Daily currency rates
+
+on:
+  schedule:
+    # UTC! 07:00 UTC ≈ 10:00 за Києвом влітку, 09:00 взимку
+    - cron: "0 7 * * *"
+  workflow_dispatch:        # дозволяє запустити вручну кнопкою
+
+permissions:
+  contents: write           # право пушити в репозиторій
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Клонуємо репозиторій
+        uses: actions/checkout@v4
+
+      - name: Ставимо Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Оновлюємо дані
+        run: python scripts/update_rates.py
+
+      - name: Комітимо зміни, якщо вони є
+        run: |
+          git config user.name "ТВОЄ_ІМʼЯ_КОРИСТУВАЧА"
+          git config user.email "12345678+ТВОЄ_ІМʼЯ@users.noreply.github.com"
+          git add data/rates.csv
+          git diff --staged --quiet && echo "Змін немає" && exit 0
+          git commit -m "data: курси валют за $(date -u +%Y-%m-%d)"
+          git push
