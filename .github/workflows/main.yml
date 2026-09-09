@@ -26,8 +26,8 @@ jobs:
 
       - name: Комітимо зміни, якщо вони є
         run: |
-          git config user.name "ТВОЄ_ІМʼЯ_КОРИСТУВАЧА"
-          git config user.email "12345678+ТВОЄ_ІМʼЯ@users.noreply.github.com"
+          git config user.name "reflexow9"
+          git config user.email "artembond.corporation@gmail.com"
           git add data/rates.csv
           git diff --staged --quiet && echo "Змін немає" && exit 0
           git commit -m "data: курси валют за $(date -u +%Y-%m-%d)"
